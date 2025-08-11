@@ -14,8 +14,9 @@ services:
       - data:/data
       - models:/models
       - open-webui:/app/backend/data  # Corrected path based on documentation
-    ports:
-      - "8080:8080"
+    # uncomment if you want to expose the web UI directly
+    #ports: 
+    #  - "8080:8080"
     logging:
       driver: json-file
       options:
@@ -25,11 +26,16 @@ services:
       - ollama
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.openwebui.rule=Host(`${HPPS_HOSTNAME}`)
+      - traefik.http.routers.openwebui.entrypoints=websecure
+      - traefik.http.routers.openwebui.tls.certresolver=letsencrypt
+      - traefik.http.routers.openwebui.service=api@internal
     networks:
       - ollama-app
       - n8n-app # Not required for ollama, but needed for n8n, comment out if not needed
       - traefik
-
     restart: unless-stopped
     
   ollama:

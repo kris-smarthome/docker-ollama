@@ -1,0 +1,80 @@
+services:
+  open-webui:
+    container_name: open-webui
+    image: ghcr.io/open-webui/open-webui:main
+    security_opt:       
+      - no-new-privileges:true
+    environment:
+      - MODEL_DOWNLOAD_DIR=/models
+      - OLLAMA_API_BASE_URL=${BASE_API_URL:-http://ollama:11434}  # Use environment variable or default to ollama API URL
+      - OLLAMA_API_URL=${API_URL:-http://ollama:11434}  # Use environment variable or default to ollama API URL
+      - LOG_LEVEL=debug
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+    volumes:
+      - data:/data
+      - models:/models
+      - open-webui:/app/backend/data  # Corrected path based on documentation
+    ports:
+      - "8080:8080"
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    depends_on:
+      - ollama
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ollama-app
+      - n8n-app # Not required for ollama, but needed for n8n, comment out if not needed
+      - traefik
+
+    restart: unless-stopped
+    
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    runtime: nvidia
+    security_opt:       
+      - no-new-privileges:true
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - CUDA_VISIBLE_DEVICES=0
+      - LOG_LEVEL=debug
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: all
+    volumes:
+      - ollama:/root/.ollama
+      - models:/models
+    ports:
+      - "11434:11434"
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    networks:
+      - ollama-app
+    restart: unless-stopped
+  
+    
+volumes:
+  data:
+  models:
+  ollama:
+  open-webui:
+networks:
+  ollama-app:
+    name: ollama-app
+    driver: bridge
+  n8n-app: #comment out if not needed
+    external: true # This is needed to connect to the n8n-app network which already exists
+  traefik:
+    external: true

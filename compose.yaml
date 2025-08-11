@@ -34,7 +34,7 @@ services:
       - traefik.http.routers.openwebui.service=api@internal
     networks:
       - ollama-app
-      - n8n-app # Not required for ollama, but needed for n8n, comment out if not needed
+      # - n8n-app # Not required for ollama, but needed for n8n, comment out if not needed
       - traefik
     restart: unless-stopped
     
@@ -68,6 +68,7 @@ services:
         max-file: "2"
     networks:
       - ollama-app
+      - n8n-app # Not required for ollama, but needed for n8n, comment out if not needed
     restart: unless-stopped
   
     

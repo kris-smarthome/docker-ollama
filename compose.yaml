@@ -28,7 +28,7 @@ services:
       - "host.docker.internal:host-gateway"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.openwebui.rule=Host(`${HPPS_HOSTNAME}`)
+      - traefik.http.routers.openwebui.rule=Host(`${HTTPS_HOSTNAME}`)
       - traefik.http.routers.openwebui.entrypoints=websecure
       - traefik.http.routers.openwebui.tls.certresolver=letsencrypt
       - traefik.http.services.openwebui.loadbalancer.server.port=8080

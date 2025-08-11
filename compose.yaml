@@ -31,7 +31,7 @@ services:
       - traefik.http.routers.openwebui.rule=Host(`${HPPS_HOSTNAME}`)
       - traefik.http.routers.openwebui.entrypoints=websecure
       - traefik.http.routers.openwebui.tls.certresolver=letsencrypt
-      - traefik.http.routers.openwebui.service=api@internal
+      - traefik.http.services.openwebui.loadbalancer.server.port=8080
     networks:
       - ollama-app
       # - n8n-app # Not required for ollama, but needed for n8n, comment out if not needed

@@ -6,8 +6,8 @@ services:
       - no-new-privileges:true
     environment:
       - MODEL_DOWNLOAD_DIR=/models
-      - OLLAMA_API_BASE_URL=http://ollama:11434  # Use environment variable or default to ollama API URL
-      - OLLAMA_API_URL=http://ollama:11434  # Use environment variable or default to ollama API URL
+      - OLLAMA_API_BASE_URL=http://ollama:11434  
+      - OLLAMA_API_URL=http://ollama:11434 
       - LOG_LEVEL=debug
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
     volumes:

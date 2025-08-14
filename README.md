@@ -16,4 +16,4 @@ docker compose up -d
 
 > [!NOTE]
 > Create the traefik network before deploying this stack, if it doesn't already exist: `docker network create -d bridge traefik`. 
-> Connected to the N8N network for simplicity, remove if not needed or N8N is on a separate host.
+> Connected to the N8N network for simplicity, remove if not needed or if N8N is on a separate host. 
